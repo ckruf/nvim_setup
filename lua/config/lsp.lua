@@ -26,6 +26,7 @@ vim.defer_fn(function()
     "sqls",
     -- c#
     "omnisharp",
+    "jdtls",
   }
   mlsp.setup({ ensure_installed = ensure })
 
@@ -34,6 +35,8 @@ vim.defer_fn(function()
 
   -- A helper to set up a server with defaults, plus per-server tweaks
   local function setup_server(name)
+    if name == "jdtls" then return end
+
     local cfg = { capabilities = capabilities }
 
     if name == "lua_ls" then

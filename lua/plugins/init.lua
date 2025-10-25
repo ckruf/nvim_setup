@@ -50,6 +50,7 @@ return {
     opts = {
       view_options = { show_hidden = true },
       default_file_explorer = true,
+      watch_for_changes = true,
     },
   },
 
@@ -123,11 +124,14 @@ return {
     },
   },
 
+
+  { "mfussenegger/nvim-jdtls", ft = "java" },
+
   -- Treesitter (syntax/AST)
   { "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     opts = {
-      ensure_installed = { "lua", "vim", "vimdoc", "python", "tsx", "typescript", "javascript", "json", "yaml", "dockerfile", "bash", "markdown", "regex", "sql", "html", "css" },
+      ensure_installed = { "lua", "vim", "vimdoc", "python", "tsx", "typescript", "javascript", "json", "yaml", "dockerfile", "bash", "markdown", "regex", "sql", "html", "css", "java" },
       highlight = { enable = true },
       indent = { enable = true },
     },
