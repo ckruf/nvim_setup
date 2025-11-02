@@ -87,7 +87,16 @@ return {
         pickers = {
           find_files = { theme = "dropdown" },
           live_grep  = { theme = "dropdown" },
-          buffers    = { theme = "dropdown" },
+          buffers    = {
+            theme = "dropdown",
+            sort_mru = true,
+            ignore_current_buffer = true,
+            initial_mode = "normal",
+            mappings = {
+              i = { ["<C-d>"] = "delete_buffer" }, -- delete in insert mode
+              n = { ["d"] = "delete_buffer" },     -- delete in normal mode
+            },
+          },
           help_tags  = { theme = "dropdown" },
         },
         extensions = {
