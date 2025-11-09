@@ -7,6 +7,10 @@ vim.keymap.set('t', '<Esc><Esc>', [[<C-\><C-n>]], { desc = 'Leave terminal-mode'
 -- Diagnostics
 vim.keymap.set('n', 'gl', vim.diagnostic.open_float, { desc = "Show diagnostic for current line" })
 
+-- LSP keymaps
+vim.keymap.set('n', 'grd', vim.lsp.buf.definition, { desc = "Go to definition" })
+vim.keymap.set('n', 'grD', vim.lsp.buf.declaration, { desc = "Go to declaration" })
+
 -- File explorers
 vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file tree" })
 vim.keymap.set("n", "<leader>o", "<cmd>Oil<CR>", { desc = "Open Oil file browser" })

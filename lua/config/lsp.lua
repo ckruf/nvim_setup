@@ -66,6 +66,7 @@ vim.defer_fn(function()
       cfg.handlers["o#/projectconfiguration"] = function() end
       cfg.handlers["o#/projectdiagnosticstatus"] = function() end
       cfg.handlers["o#/unresolveddependencies"] = function() end
+      cfg.handlers["o#/projectchanged"] = function() end
 
       cfg.on_attach = function(client, bufnr)
         -- Disable semantic tokens if they cause issues
