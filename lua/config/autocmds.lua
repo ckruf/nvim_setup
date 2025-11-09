@@ -8,3 +8,14 @@ au("TextYankPost", {
   group = my,
   callback = function() vim.highlight.on_yank({ timeout = 120 }) end,
 })
+
+-- Auto-cd into directory when opened as argument
+au("VimEnter", {
+  group = my,
+  callback = function()
+    local dir = vim.fn.argv(0)
+    if vim.fn.isdirectory(dir) == 1 then
+      vim.cmd.cd(dir)
+    end
+  end,
+})

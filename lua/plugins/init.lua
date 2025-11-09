@@ -39,19 +39,133 @@ return {
       })
     end,
   },
+
+  -- Buffer tabs
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("bufferline").setup({
+        options = {
+          mode = "buffers",
+          themable = true,
+          numbers = "ordinal",  -- Show 1, 2, 3... for easy jumping
+          close_command = "bdelete! %d",
+          right_mouse_command = "bdelete! %d",
+          left_mouse_command = "buffer %d",
+          middle_mouse_command = nil,
+          indicator = {
+            style = "underline",
+          },
+          buffer_close_icon = "×",
+          modified_icon = "●",
+          close_icon = "",
+          left_trunc_marker = "",
+          right_trunc_marker = "",
+          diagnostics = false,  -- Disabled to keep tabs clean
+          -- Filter out special buffers
+          offsets = {
+            {
+              filetype = "NvimTree",
+              text = "File Explorer",
+              text_align = "center",
+              separator = true,
+            },
+          },
+          -- Exclude nvim-tree and terminal buffers from showing as tabs
+          custom_filter = function(buf_number)
+            local buftype = vim.bo[buf_number].buftype
+            local filetype = vim.bo[buf_number].filetype
+            -- Filter out special buffer types
+            if buftype == "terminal" then return false end
+            if filetype == "NvimTree" then return false end
+            return true
+          end,
+          show_buffer_close_icons = true,
+          show_close_icon = false,
+          show_tab_indicators = true,
+          separator_style = "thin",
+          always_show_bufferline = true,
+          sort_by = "insert_after_current",
+        },
+      })
+    end,
+  },
+
   -- theme
   { "folke/tokyonight.nvim", lazy = false, priority = 1000, config = function() vim.cmd.colorscheme("tokyonight") end },
   -- key suggestions for nvim 
   { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
 
   -- file browser, launch via ':Oil'
-  { 
+  {
     "stevearc/oil.nvim",
     opts = {
       view_options = { show_hidden = true },
-      default_file_explorer = true,
+      default_file_explorer = false,  -- nvim-tree is now default
       watch_for_changes = true,
     },
+  },
+
+  -- File tree sidebar
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      -- Disable netrw for nvim-tree
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+
+      require("nvim-tree").setup({
+        -- Automatically open when nvim starts on a directory
+        hijack_directories = {
+          enable = true,
+          auto_open = true,
+        },
+        -- Replace netrw
+        disable_netrw = true,
+        hijack_netrw = true,
+        -- Update working directory when changing dirs in tree
+        update_cwd = true,
+        sync_root_with_cwd = true,
+        -- Don't show nvim-tree in buffer list
+        view = {
+          side = "left",
+          width = 35,
+        },
+        -- Hide nvim-tree buffer from buffer lists
+        filters = {
+          custom = { "^.git$" },
+        },
+        -- Git integration
+        git = {
+          enable = true,
+          ignore = false,
+        },
+        -- Show hidden files
+        renderer = {
+          hidden_display = "all",
+          icons = {
+            show = {
+              git = true,
+              folder = true,
+              file = true,
+              folder_arrow = true,
+            },
+          },
+        },
+        -- File management actions
+        actions = {
+          open_file = {
+            quit_on_open = false,  -- Keep tree open when opening file
+            window_picker = {
+              enable = true,
+            },
+          },
+        },
+      })
+    end,
   },
 
   -- Git 
