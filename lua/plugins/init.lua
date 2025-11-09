@@ -265,6 +265,7 @@ return {
   { "williamboman/mason.nvim", opts = {} },
   { "williamboman/mason-lspconfig.nvim" },
   { "neovim/nvim-lspconfig" },
+  { "Hoffs/omnisharp-extended-lsp.nvim" },
 
   { "hrsh7th/nvim-cmp",
     dependencies = {
