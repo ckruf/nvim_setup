@@ -265,7 +265,19 @@ return {
   { "williamboman/mason.nvim", opts = {} },
   { "williamboman/mason-lspconfig.nvim" },
   { "neovim/nvim-lspconfig" },
-  { "Hoffs/omnisharp-extended-lsp.nvim" },
+
+  -- C# / .NET LSP
+  {
+    "seblyng/roslyn.nvim",
+    ft = "cs",
+    opts = {
+      -- Roslyn configuration
+      filewatching = "auto",
+      broad_search = false,
+      lock_target = false,
+      silent = false,
+    },
+  },
 
   { "hrsh7th/nvim-cmp",
     dependencies = {

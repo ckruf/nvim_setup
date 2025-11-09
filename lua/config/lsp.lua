@@ -9,7 +9,12 @@ vim.defer_fn(function()
   -- Mason bootstrap
   local mason = require("mason")
   local mlsp  = require("mason-lspconfig")
-  mason.setup()
+  mason.setup({
+    registries = {
+      "github:mason-org/mason-registry",
+      "github:Crashdummyy/mason-registry",
+    },
+  })
 
   -- Servers you want installed by Mason
   local ensure = {
@@ -24,8 +29,6 @@ vim.defer_fn(function()
     "dockerls", "yamlls", "jsonls",
     -- sql
     "sqls",
-    -- c#
-    "omnisharp",
     "jdtls",
   }
   mlsp.setup({ ensure_installed = ensure })
@@ -47,31 +50,6 @@ vim.defer_fn(function()
           telemetry = { enable = false },
         },
       }
-    elseif name == "omnisharp" then
-      -- OmniSharp requires explicit handlers to avoid vim.NIL errors
-      cfg.handlers = {}
-
-      -- Add omnisharp-extended handlers if available
-      local ok, omnisharp_extended = pcall(require, "omnisharp_extended")
-      if ok then
-        cfg.handlers["textDocument/definition"] = omnisharp_extended.definition_handler
-        cfg.handlers["textDocument/typeDefinition"] = omnisharp_extended.type_definition_handler
-        cfg.handlers["textDocument/references"] = omnisharp_extended.references_handler
-        cfg.handlers["textDocument/implementation"] = omnisharp_extended.implementation_handler
-      end
-
-      -- Add handlers for OmniSharp-specific notifications to prevent INVALID_SERVER_MESSAGE errors
-      cfg.handlers["o#/msbuildprojectdiagnostics"] = function() end
-      cfg.handlers["o#/backgrounddiagnosticstatus"] = function() end
-      cfg.handlers["o#/projectconfiguration"] = function() end
-      cfg.handlers["o#/projectdiagnosticstatus"] = function() end
-      cfg.handlers["o#/unresolveddependencies"] = function() end
-      cfg.handlers["o#/projectchanged"] = function() end
-
-      cfg.on_attach = function(client, bufnr)
-        -- Disable semantic tokens if they cause issues
-        client.server_capabilities.semanticTokensProvider = nil
-      end
     end
 
     -- If you're on older lspconfig, TypeScript might still be "tsserver"
