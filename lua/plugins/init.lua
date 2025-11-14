@@ -136,7 +136,7 @@ return {
         },
         -- Hide nvim-tree buffer from buffer lists
         filters = {
-          custom = { "^.git$" },
+          custom = {},
         },
         -- Git integration
         git = {
@@ -168,7 +168,25 @@ return {
     end,
   },
 
-  -- Git 
+  -- Commenting
+  {
+    "numToStr/Comment.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- LHS of toggle mappings in NORMAL mode
+      toggler = {
+        line = 'gcc',  -- Line-comment toggle keymap
+        block = 'gbc', -- Block-comment toggle keymap
+      },
+      -- LHS of operator-pending mappings in NORMAL and VISUAL mode
+      opleader = {
+        line = 'gc',   -- Line-comment keymap
+        block = 'gb',  -- Block-comment keymap
+      },
+    },
+  },
+
+  -- Git
   { "lewis6991/gitsigns.nvim", event = "BufReadPre", opts = {} },
 
   -- Fuzzy find
