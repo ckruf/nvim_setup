@@ -72,6 +72,17 @@ Integrated terminal inside Neovim.
 - Persistent size
 - Starts in insert mode
 
+### Code Editing
+
+#### [Comment.nvim](https://github.com/numToStr/Comment.nvim)
+Smart commenting plugin with language-aware support.
+- Toggle line comments with `gcc`
+- Toggle block comments with `gbc`
+- Operator-pending mode with `gc` (line) and `gb` (block)
+- Works with treesitter for proper comment syntax
+
+**Command naming:** The `gc` and `gb` prefixes follow Vim's convention of using `g` for "go" or additional operations (like `gd` for go-to-definition). Here `gc` means "go comment" for line comments, and `gb` means "go block" for block comments.
+
 ### Language Support
 
 #### [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
@@ -145,6 +156,19 @@ Autocompletion engine with multiple sources.
 | `<C-k>` | Move up | Focus top window |
 | `<C-l>` | Move right | Focus right window |
 
+### Window Management (Splits)
+| Key | Action | Description |
+|-----|--------|-------------|
+| `<C-w>v` | Vertical split | Split window vertically |
+| `<C-w>s` | Horizontal split | Split window horizontally |
+| `<C-w>q` | Close window | Close current split window |
+| `<C-w>o` | Only window | Close all other windows |
+| `<C-w>=` | Equalize windows | Make all windows equal size |
+| `:vsplit` | Vertical split | Command mode vertical split |
+| `:split` | Horizontal split | Command mode horizontal split |
+| `:q` | Quit window | Close current window |
+| `:only` | Only window | Close all other windows |
+
 ### Buffer Management
 | Key | Action | Description |
 |-----|--------|-------------|
@@ -177,6 +201,16 @@ Autocompletion engine with multiple sources.
 | Insert | `<S-Tab>` | Unindent current line |
 | Visual | `<S-Tab>` | Unindent selection (keeps selection) |
 | Normal | `<S-Tab>` | Unindent current line |
+
+### Commenting
+| Mode | Key | Action | Description |
+|------|-----|--------|-------------|
+| Normal | `gcc` | Toggle comment | Comment/uncomment current line |
+| Normal | `gbc` | Toggle block comment | Comment/uncomment as block |
+| Normal/Visual | `gc` + motion | Line comment | Comment using motion (e.g., `gcap` for paragraph) |
+| Normal/Visual | `gb` + motion | Block comment | Block comment using motion |
+| Visual | `gc` | Line comment | Comment selected lines |
+| Visual | `gb` | Block comment | Comment selection as block |
 
 ### Completion (Insert Mode)
 | Key | Action | Description |
