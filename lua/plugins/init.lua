@@ -87,7 +87,7 @@ return {
           show_tab_indicators = true,
           separator_style = "thin",
           always_show_bufferline = true,
-          sort_by = "insert_after_current",
+          sort_by = "id",  -- Keep buffers in order by ID, so numbers stay consistent
         },
       })
     end,
