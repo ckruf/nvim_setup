@@ -2,7 +2,7 @@
 local utils = require("config.utils")
 
 -- Being able to escape from Terminal mode to normal mode
-vim.keymap.set('t', '<Esc><Esc>', [[<C-\><C-n>]], { desc = 'Leave terminal-mode' })
+vim.keymap.set('t', '<C-[>', [[<C-\><C-n>]], { desc = 'Leave terminal-mode' })
 
 -- Diagnostics
 vim.keymap.set('n', 'gl', vim.diagnostic.open_float, { desc = "Show diagnostic for current line" })
