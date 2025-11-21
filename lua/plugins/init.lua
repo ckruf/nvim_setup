@@ -191,6 +191,18 @@ return {
 
   -- Git
   { "lewis6991/gitsigns.nvim", event = "BufReadPre", opts = {} },
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
+    keys = {
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Git diff" },
+      { "<leader>gs", "<cmd>DiffviewOpen --staged<cr>", desc = "Git diff staged" },
+      { "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
+      { "<leader>gH", "<cmd>DiffviewFileHistory<cr>", desc = "Branch history" },
+      { "<leader>gq", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
+    },
+    opts = {},
+  },
 
   -- Fuzzy find
   {

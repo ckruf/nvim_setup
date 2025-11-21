@@ -64,6 +64,12 @@ Fuzzy finder for files, text, buffers, and help.
 #### [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
 Git decorations and inline blame information.
 
+#### [diffview.nvim](https://github.com/sindrets/diffview.nvim)
+Git diff viewer with side-by-side file comparison.
+- View working tree changes vs HEAD
+- View staged changes
+- Browse file and branch history
+
 ### Terminal
 
 #### [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
@@ -196,6 +202,15 @@ Autocompletion engine with multiple sources.
 | Key | Action | Description |
 |-----|--------|-------------|
 | `<C-\>` | Toggle terminal | Open/close integrated terminal |
+
+### Git (Diffview)
+| Key | Action | Description |
+|-----|--------|-------------|
+| `<leader>gd` | Git diff | Open diff view (working tree vs HEAD) |
+| `<leader>gs` | Git diff staged | Open diff view for staged changes |
+| `<leader>gh` | File history | View git history for current file |
+| `<leader>gH` | Branch history | View git history for entire branch |
+| `<leader>gq` | Close diffview | Close the diffview panel |
 
 ### Indentation
 | Mode | Key | Action |
