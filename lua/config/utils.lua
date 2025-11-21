@@ -35,4 +35,24 @@ function M.smart_buffer_delete()
   vim.cmd("bdelete " .. current_buf)
 end
 
+-- Close all other buffers (keep only current one)
+function M.close_other_buffers()
+  local current_buf = vim.api.nvim_get_current_buf()
+
+  -- Get all listed buffers
+  local buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(buffers) do
+    -- Only delete if it's not the current buffer, it's valid, listed, and not a special buffer
+    if buf ~= current_buf
+       and vim.api.nvim_buf_is_valid(buf)
+       and vim.bo[buf].buflisted
+       and vim.bo[buf].buftype == "" then
+      vim.cmd("bdelete " .. buf)
+    end
+  end
+
+  vim.notify("Closed all other buffers", vim.log.levels.INFO)
+end
+
 return M

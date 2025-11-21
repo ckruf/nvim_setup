@@ -6,6 +6,20 @@ vim.keymap.set('t', '<C-[>', [[<C-\><C-n>]], { desc = 'Leave terminal-mode' })
 
 -- Diagnostics
 vim.keymap.set('n', 'gl', vim.diagnostic.open_float, { desc = "Show diagnostic for current line" })
+vim.keymap.set('n', 'gL', function()
+  local diagnostics = vim.diagnostic.get(0, { lnum = vim.api.nvim_win_get_cursor(0)[1] - 1 })
+  if #diagnostics == 0 then
+    vim.notify("No diagnostics on this line", vim.log.levels.INFO)
+    return
+  end
+  local messages = {}
+  for _, d in ipairs(diagnostics) do
+    table.insert(messages, d.message)
+  end
+  local text = table.concat(messages, "\n")
+  vim.fn.setreg("+", text)
+  vim.notify("Diagnostic copied to clipboard", vim.log.levels.INFO)
+end, { desc = "Copy line diagnostic to clipboard" })
 
 -- LSP keymaps
 vim.keymap.set('n', 'grd', vim.lsp.buf.definition, { desc = "Go to definition" })
@@ -26,6 +40,7 @@ vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Previous 
 vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer" })
 vim.keymap.set("n", "<leader>bd", utils.smart_buffer_delete, { desc = "Delete buffer (smart)" })
 vim.keymap.set("n", "<leader>bc", "<cmd>BufferLinePickClose<CR>", { desc = "Pick buffer to close" })
+vim.keymap.set("n", "<leader>co", utils.close_other_buffers, { desc = "Close all other buffers" })
 
 -- Jump to specific buffer by number
 vim.keymap.set("n", "<leader>1", "<cmd>BufferLineGoToBuffer 1<CR>", { desc = "Go to buffer 1" })

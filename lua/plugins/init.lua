@@ -133,9 +133,12 @@ return {
         view = {
           side = "left",
           width = 35,
+          number = true,
+          relativenumber = true,
         },
         -- Hide nvim-tree buffer from buffer lists
         filters = {
+          dotfiles = false,
           custom = {},
         },
         -- Git integration

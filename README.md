@@ -135,6 +135,7 @@ Autocompletion engine with multiple sources.
 | Key | Action | Description |
 |-----|--------|-------------|
 | `gl` | Open diagnostic float | Show diagnostic for current line |
+| `gL` | Copy diagnostic | Copy line diagnostic to clipboard |
 
 ### LSP Navigation
 | Key | Action | Description |
@@ -176,6 +177,7 @@ Autocompletion engine with multiple sources.
 | `<S-l>` | Next buffer | Cycle to next buffer |
 | `<leader>bd` | Delete buffer | Smart buffer delete |
 | `<leader>bc` | Pick buffer to close | Interactive buffer close |
+| `<leader>co` | Close other buffers | Close all buffers except current |
 | `<leader>1` - `<leader>9` | Jump to buffer N | Jump to buffer by number |
 
 ### Telescope (Fuzzy Finder)
