@@ -30,6 +30,8 @@ vim.defer_fn(function()
     -- sql
     "sqls",
     "jdtls",
+    -- go
+    "gopls",
   }
   mlsp.setup({ ensure_installed = ensure })
 
