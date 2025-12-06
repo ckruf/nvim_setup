@@ -371,4 +371,213 @@ return {
       })
     end
   },
+
+  -- Mason DAP integration - must be top-level to ensure adapters install on startup
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    event = "VeryLazy",
+    dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
+    opts = {
+      ensure_installed = { "debugpy", "delve", "js-debug-adapter", "netcoredbg" },
+      automatic_installation = true,
+      handlers = {},
+    },
+  },
+
+  -- DAP (Debug Adapter Protocol)
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      -- UI for debugging
+      {
+        "rcarriga/nvim-dap-ui",
+        dependencies = { "nvim-neotest/nvim-nio" },
+        config = function()
+          local dapui = require("dapui")
+          dapui.setup()
+
+          -- Auto open/close UI when debugging starts/ends
+          local dap = require("dap")
+          dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
+          dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
+          dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+        end,
+      },
+      -- Virtual text showing variable values inline
+      {
+        "theHamsta/nvim-dap-virtual-text",
+        opts = { commented = true },
+      },
+    },
+    keys = {
+      { "<F5>", function() require("dap").continue() end, desc = "Debug: Start/Continue" },
+      { "<F10>", function() require("dap").step_over() end, desc = "Debug: Step Over" },
+      { "<F11>", function() require("dap").step_into() end, desc = "Debug: Step Into" },
+      { "<F12>", function() require("dap").step_out() end, desc = "Debug: Step Out" },
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug: Toggle Breakpoint" },
+      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "Debug: Conditional Breakpoint" },
+      { "<leader>dl", function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: ")) end, desc = "Debug: Log Point" },
+      { "<leader>dr", function() require("dap").repl.open() end, desc = "Debug: Open REPL" },
+      { "<leader>du", function() require("dapui").toggle() end, desc = "Debug: Toggle UI" },
+      { "<leader>de", function() require("dapui").eval() end, desc = "Debug: Evaluate", mode = { "n", "v" } },
+      { "<leader>dx", function() require("dap").terminate() end, desc = "Debug: Terminate" },
+    },
+    config = function()
+      local dap = require("dap")
+
+      -- Python configuration
+      dap.adapters.python = function(cb, config)
+        if config.request == "attach" then
+          local port = (config.connect or config).port
+          local host = (config.connect or config).host or "127.0.0.1"
+          cb({ type = "server", port = port, host = host })
+        else
+          local debugpy_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
+          cb({ type = "executable", command = debugpy_path, args = { "-m", "debugpy.adapter" } })
+        end
+      end
+
+      dap.configurations.python = {
+        {
+          type = "python",
+          request = "launch",
+          name = "Launch file",
+          program = "${file}",
+          pythonPath = function()
+            -- Try to find venv python first
+            local venv = os.getenv("VIRTUAL_ENV")
+            if venv then return venv .. "/bin/python" end
+            if vim.fn.executable("python3") == 1 then return "python3" end
+            return "python"
+          end,
+        },
+        {
+          type = "python",
+          request = "launch",
+          name = "Launch file with arguments",
+          program = "${file}",
+          args = function()
+            local args_string = vim.fn.input("Arguments: ")
+            return vim.split(args_string, " +")
+          end,
+          pythonPath = function()
+            local venv = os.getenv("VIRTUAL_ENV")
+            if venv then return venv .. "/bin/python" end
+            if vim.fn.executable("python3") == 1 then return "python3" end
+            return "python"
+          end,
+        },
+      }
+
+      -- Go configuration (Delve)
+      dap.adapters.delve = {
+        type = "server",
+        port = "${port}",
+        executable = {
+          command = vim.fn.stdpath("data") .. "/mason/bin/dlv",
+          args = { "dap", "-l", "127.0.0.1:${port}" },
+        },
+      }
+
+      dap.configurations.go = {
+        {
+          type = "delve",
+          name = "Debug",
+          request = "launch",
+          program = "${file}",
+        },
+        {
+          type = "delve",
+          name = "Debug Package",
+          request = "launch",
+          program = "${fileDirname}",
+        },
+        {
+          type = "delve",
+          name = "Debug test",
+          request = "launch",
+          mode = "test",
+          program = "${file}",
+        },
+        {
+          type = "delve",
+          name = "Debug test (go.mod)",
+          request = "launch",
+          mode = "test",
+          program = "./${relativeFileDirname}",
+        },
+      }
+
+      -- JavaScript/TypeScript configuration
+      dap.adapters["pwa-node"] = {
+        type = "server",
+        host = "localhost",
+        port = "${port}",
+        executable = {
+          command = "node",
+          args = {
+            vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js",
+            "${port}",
+          },
+        },
+      }
+
+      for _, lang in ipairs({ "javascript", "typescript", "javascriptreact", "typescriptreact" }) do
+        dap.configurations[lang] = {
+          {
+            type = "pwa-node",
+            request = "launch",
+            name = "Launch file",
+            program = "${file}",
+            cwd = "${workspaceFolder}",
+          },
+          {
+            type = "pwa-node",
+            request = "attach",
+            name = "Attach",
+            processId = require("dap.utils").pick_process,
+            cwd = "${workspaceFolder}",
+          },
+        }
+      end
+
+      -- C# / .NET configuration (netcoredbg)
+      dap.adapters.coreclr = {
+        type = "executable",
+        command = vim.fn.stdpath("data") .. "/mason/bin/netcoredbg",
+        args = { "--interpreter=vscode" },
+      }
+
+      dap.configurations.cs = {
+        {
+          type = "coreclr",
+          name = "Launch",
+          request = "launch",
+          program = function()
+            return vim.fn.input("Path to dll: ", vim.fn.getcwd() .. "/bin/Debug/", "file")
+          end,
+        },
+        {
+          type = "coreclr",
+          name = "Attach",
+          request = "attach",
+          processId = require("dap.utils").pick_process,
+        },
+      }
+
+      -- Breakpoint styling
+      vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "◐", texthl = "DapBreakpointCondition", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapLogPoint", { text = "◆", texthl = "DapLogPoint", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapStopped", { text = "→", texthl = "DapStopped", linehl = "DapStopped", numhl = "DapStopped" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "○", texthl = "DapBreakpointRejected", linehl = "", numhl = "" })
+
+      -- Highlight groups for breakpoints
+      vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#e51400" })
+      vim.api.nvim_set_hl(0, "DapBreakpointCondition", { fg = "#e5a514" })
+      vim.api.nvim_set_hl(0, "DapLogPoint", { fg = "#61afef" })
+      vim.api.nvim_set_hl(0, "DapStopped", { fg = "#98c379", bg = "#2d3b2d" })
+      vim.api.nvim_set_hl(0, "DapBreakpointRejected", { fg = "#5c6370" })
+    end,
+  },
 }

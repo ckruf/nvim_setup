@@ -6,6 +6,7 @@ Modern Neovim configuration with LSP support, file navigation, and productivity 
 
 This configuration uses [lazy.nvim](https://github.com/folke/lazy.nvim) as the plugin manager and focuses on:
 - Language Server Protocol (LSP) integration for multiple languages
+- Debug Adapter Protocol (DAP) for debugging Python, Go, JS/TS, C#, and Java
 - Modern UI with statusline, bufferline, and file trees
 - Fuzzy finding with Telescope
 - Git integration
@@ -128,6 +129,34 @@ Autocompletion engine with multiple sources.
 - [LuaSnip](https://github.com/L3MON4D3/LuaSnip) - Snippet engine
 - [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) - Collection of snippets for many languages
 
+### Debugging (DAP)
+
+Debug Adapter Protocol support for multiple languages.
+
+#### [nvim-dap](https://github.com/mfussenegger/nvim-dap)
+Core DAP client providing debugging functionality.
+
+#### [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
+UI for debugging with panels for variables, call stack, breakpoints, and REPL.
+- Auto opens/closes when debugging starts/ends
+
+#### [nvim-dap-virtual-text](https://github.com/theHamsta/nvim-dap-virtual-text)
+Shows variable values inline while debugging.
+
+#### [mason-nvim-dap.nvim](https://github.com/jay-babu/mason-nvim-dap.nvim)
+Mason integration for automatic debug adapter installation.
+
+**Supported Languages & Adapters:**
+| Language | Debug Adapter | Mason Package |
+|----------|---------------|---------------|
+| Python | debugpy | `debugpy` |
+| Go | delve | `delve` |
+| JavaScript/TypeScript | js-debug | `js-debug-adapter` |
+| C# / .NET | netcoredbg | `netcoredbg` |
+| Java | java-debug-adapter | `java-debug-adapter` |
+
+**Note:** Debug adapters are automatically installed via Mason on startup.
+
 ---
 
 ## Keymaps
@@ -228,6 +257,30 @@ Autocompletion engine with multiple sources.
 | Normal/Visual | `gb` + motion | Block comment | Block comment using motion |
 | Visual | `gc` | Line comment | Comment selected lines |
 | Visual | `gb` | Block comment | Comment selection as block |
+
+### Debugging
+| Key | Action | Description |
+|-----|--------|-------------|
+| `<F5>` | Start/Continue | Start debugging or continue execution |
+| `<F10>` | Step over | Step over current line |
+| `<F11>` | Step into | Step into function call |
+| `<F12>` | Step out | Step out of current function |
+| `<leader>db` | Toggle breakpoint | Add/remove breakpoint on current line |
+| `<leader>dB` | Conditional breakpoint | Set breakpoint with condition |
+| `<leader>dl` | Log point | Set a log point (prints message without stopping) |
+| `<leader>dr` | Open REPL | Open debug REPL |
+| `<leader>du` | Toggle UI | Show/hide debug UI panels |
+| `<leader>de` | Evaluate | Evaluate expression (works in visual mode) |
+| `<leader>dx` | Terminate | Stop debugging session |
+
+### Java Debugging
+| Key | Action | Description |
+|-----|--------|-------------|
+| `<leader>jt` | Test method | Run/debug nearest test method |
+| `<leader>jT` | Test class | Run/debug entire test class |
+| `<leader>jm` | Extract method | Extract selection to method |
+| `<leader>jv` | Extract variable | Extract expression to variable |
+| `<leader>jo` | Organize imports | Organize Java imports |
 
 ### Completion (Insert Mode)
 | Key | Action | Description |

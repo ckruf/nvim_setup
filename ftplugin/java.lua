@@ -3,7 +3,16 @@ local jdtls = require("jdtls")
 local mason = vim.fn.stdpath("data") .. "/mason"
 local jdtls_path = mason .. "/packages/jdtls"
 local launcher = vim.fn.glob(jdtls_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
-local config_dir = jdtls_path .. "/config_mac"  -- macOS. On Linux: config_linux
+
+-- Auto-detect OS for config directory
+local config_dir
+if vim.fn.has("mac") == 1 then
+  config_dir = jdtls_path .. "/config_mac"
+elseif vim.fn.has("unix") == 1 then
+  config_dir = jdtls_path .. "/config_linux"
+else
+  config_dir = jdtls_path .. "/config_win"
+end
 
 local root_markers = { "gradlew", "mvnw", "pom.xml", "build.gradle", ".git" }
 local root_dir = require("jdtls.setup").find_root(root_markers)
@@ -14,6 +23,22 @@ local workspace = vim.fn.expand("~/.local/share/jdtls-workspace/") .. project_na
 vim.fn.mkdir(workspace, "p")
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+-- Setup debug bundles (java-debug-adapter and java-test)
+local bundles = {}
+local java_debug_path = mason .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"
+local java_debug_bundle = vim.fn.glob(java_debug_path, true)
+if java_debug_bundle ~= "" then
+  table.insert(bundles, java_debug_bundle)
+end
+
+local java_test_path = mason .. "/packages/java-test/extension/server/*.jar"
+local java_test_bundles = vim.split(vim.fn.glob(java_test_path, true), "\n")
+for _, bundle in ipairs(java_test_bundles) do
+  if bundle ~= "" then
+    table.insert(bundles, bundle)
+  end
+end
 
 local config = {
   cmd = {
@@ -42,21 +67,26 @@ local config = {
       references = { includeDecompiledSources = true },
     },
   },
-  init_options = { bundles = {} },
+  init_options = { bundles = bundles },
 }
 
 jdtls.start_or_attach(config)
 
--- start_or_attach(config) ... then:
 local function map(mode, lhs, rhs, desc)
   if type(rhs) == "function" then
     vim.keymap.set(mode, lhs, rhs, { buffer = true, desc = desc })
   end
 end
 
-local jdtls = require("jdtls")
-
--- always available
+-- Java-specific keymaps
 map("n", "<leader>jo", jdtls.organize_imports, "Java: organize imports")
 map("n", "<leader>jr", vim.lsp.buf.rename,     "Rename symbol")
 map("n", "<leader>ca", vim.lsp.buf.code_action,"Code action")
+
+-- Java debug keymaps
+map("n", "<leader>jt", jdtls.test_nearest_method, "Java: test nearest method")
+map("n", "<leader>jT", jdtls.test_class, "Java: test class")
+map("n", "<leader>jm", jdtls.extract_method, "Java: extract method")
+map("v", "<leader>jm", function() jdtls.extract_method(true) end, "Java: extract method")
+map("n", "<leader>jv", jdtls.extract_variable, "Java: extract variable")
+map("v", "<leader>jv", function() jdtls.extract_variable(true) end, "Java: extract variable")
