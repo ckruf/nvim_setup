@@ -241,6 +241,24 @@ Mason integration for automatic debug adapter installation.
 | `<leader>gH` | Branch history | View git history for entire branch |
 | `<leader>gq` | Close diffview | Close the diffview panel |
 
+**Inside Diffview (default keymaps):**
+| Key | Action | Description |
+|-----|--------|-------------|
+| `<Tab>` / `<S-Tab>` | Next/prev file | Navigate between changed files |
+| `-` | Stage/unstage | Toggle staging for file under cursor |
+| `s` | Stage all | Stage all changes |
+| `u` | Unstage all | Unstage all changes |
+| `X` | Restore file | Discard changes for file under cursor |
+| `R` | Refresh | Refresh the diff view |
+| `L` | Open commit log | View commit log |
+| `<C-w><C-f>` | Open in split | Open file in a new split |
+| `gf` | Open in tab | Open file in a new tab |
+| `<leader>e` | Focus file panel | Toggle focus to file panel |
+| `<leader>b` | Toggle file panel | Show/hide file panel |
+| `g<C-x>` | Cycle layout | Cycle through diff layouts |
+| `[x` / `]x` | Prev/next conflict | Jump between merge conflicts |
+| `[c` / `]c` | Prev/next hunk | Jump between diff hunks |
+
 ### Indentation
 | Mode | Key | Action |
 |------|-----|--------|
