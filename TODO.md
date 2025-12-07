@@ -2,7 +2,10 @@
 
 ## Pending
 
-- [ ] Add lsp-lens.nvim plugin to show function usage counts inline (like JetBrains IDEs)
-  - Plugin: https://github.com/VidocqH/lsp-lens.nvim
-  - Shows "References: X" above function definitions
-  - Works with LSP servers that support code lens (TypeScript, Java, C#, Go, Python)
+## Completed
+
+- [x] Add LSP reference counts inline (like JetBrains IDEs)
+  - Custom implementation: `lua/config/lsp-references.lua`
+  - Shows "X references" at end of function/method/class definition lines
+  - Works with any LSP server supporting document symbols and references
+  - Commands: `:LspRefEnable`, `:LspRefDisable`, `:LspRefToggle`, `:LspRefRefresh`

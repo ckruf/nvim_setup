@@ -19,3 +19,6 @@ au("VimEnter", {
     end
   end,
 })
+
+-- LSP reference counts (shows "X references" above functions)
+require("config.lsp-references").setup()

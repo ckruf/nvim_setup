@@ -114,6 +114,13 @@ Advanced syntax highlighting and code understanding using AST parsing.
 - [roslyn.nvim](https://github.com/seblyng/roslyn.nvim) - C# / .NET LSP (Roslyn)
 - [nvim-jdtls](https://github.com/mfussenegger/nvim-jdtls) - Java LSP (Eclipse JDTLS)
 
+#### LSP Reference Counts (custom)
+Shows function usage counts inline (like JetBrains IDEs).
+- Displays "X references" at end of function definition lines
+- Works with any LSP server supporting document symbols and references
+- Commands: `:LspRefEnable`, `:LspRefDisable`, `:LspRefToggle`, `:LspRefRefresh`
+- Config: `lua/config/lsp-references.lua`
+
 ### Completion
 
 #### [nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
@@ -325,6 +332,7 @@ Mason integration for automatic debug adapter installation.
     │   ├── autocmds.lua       # Autocommands
     │   ├── keymaps.lua        # Global keymaps
     │   ├── lsp.lua            # LSP setup and configuration
+    │   ├── lsp-references.lua # LSP reference counts display
     │   ├── options.lua        # Vim options
     │   └── utils.lua          # Utility functions
     └── plugins/
