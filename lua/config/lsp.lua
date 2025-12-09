@@ -32,6 +32,8 @@ vim.defer_fn(function()
     "jdtls",
     -- go
     "gopls",
+    -- c/c++
+    "clangd",
   }
   mlsp.setup({ ensure_installed = ensure })
 
