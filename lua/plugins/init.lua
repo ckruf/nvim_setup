@@ -379,7 +379,6 @@ return {
     dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
     opts = {
       ensure_installed = { "debugpy", "delve", "js-debug-adapter", "netcoredbg", "codelldb" },
-      automatic_installation = true,
       handlers = {},
     },
   },
