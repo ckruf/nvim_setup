@@ -25,6 +25,7 @@ vim.defer_fn(function()
     -- web
     "ts_ls",   -- if this errors later, use "tsserver" on older setups
     "eslint",
+    "tailwindcss",
     -- infra
     "dockerls", "yamlls", "jsonls",
     -- sql
