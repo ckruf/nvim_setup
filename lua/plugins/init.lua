@@ -306,7 +306,7 @@ return {
   { "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     opts = {
-      ensure_installed = { "lua", "vim", "vimdoc", "python", "tsx", "typescript", "javascript", "json", "yaml", "dockerfile", "bash", "markdown", "regex", "sql", "html", "css", "java", "go", "gomod", "gosum", "gowork" },
+      ensure_installed = { "lua", "vim", "vimdoc", "python", "tsx", "typescript", "javascript", "json", "yaml", "dockerfile", "bash", "markdown", "regex", "sql", "html", "css", "java", "go", "gomod", "gosum", "gowork", "c" },
       highlight = { enable = true },
       indent = { enable = true },
     },
@@ -378,7 +378,7 @@ return {
     event = "VeryLazy",
     dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
     opts = {
-      ensure_installed = { "debugpy", "delve", "js-debug-adapter", "netcoredbg" },
+      ensure_installed = { "debugpy", "delve", "js-debug-adapter", "netcoredbg", "codelldb" },
       automatic_installation = true,
       handlers = {},
     },
@@ -564,6 +564,46 @@ return {
           processId = require("dap.utils").pick_process,
         },
       }
+
+      -- C/C++ configuration (codelldb)
+      dap.adapters.codelldb = {
+        type = "server",
+        port = "${port}",
+        executable = {
+          command = vim.fn.stdpath("data") .. "/mason/bin/codelldb",
+          args = { "--port", "${port}" },
+        },
+      }
+
+      dap.configurations.c = {
+        {
+          type = "codelldb",
+          request = "launch",
+          name = "Launch file",
+          program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          cwd = "${workspaceFolder}",
+          stopOnEntry = false,
+        },
+        {
+          type = "codelldb",
+          request = "launch",
+          name = "Launch with arguments",
+          program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          args = function()
+            local args_string = vim.fn.input("Arguments: ")
+            return vim.split(args_string, " +")
+          end,
+          cwd = "${workspaceFolder}",
+          stopOnEntry = false,
+        },
+      }
+
+      -- C++ uses same config as C
+      dap.configurations.cpp = dap.configurations.c
 
       -- Breakpoint styling
       vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })

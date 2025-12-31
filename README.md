@@ -190,6 +190,7 @@ Mason integration for automatic debug adapter installation.
 |-----|--------|-------------|
 | `<leader>e` | Toggle NvimTree | Open/close file tree sidebar |
 | `<leader>o` | Open Oil | Open Oil file browser |
+| `H` | Toggle dotfiles | Show/hide dotfiles in NvimTree (when focused) |
 
 ### Window Navigation
 | Key | Action | Description |
