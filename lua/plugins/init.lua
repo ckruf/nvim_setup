@@ -13,7 +13,6 @@ return {
           icons_enabled = true,
           section_separators = "",          -- Disable powerline-style symbols
           component_separators = "│",       -- Simple vertical bar
-          disabled_filetypes = { "NvimTree", "oil" }, -- Don’t show in sidebars
         },
         sections = {
           lualine_a = { "mode" },                           -- NORMAL / INSERT / etc.
@@ -36,6 +35,7 @@ return {
           lualine_y = {},
           lualine_z = { "location" },
         },
+        extensions = { "nvim-tree" },  -- Use dedicated extension for NvimTree statusline
       })
     end,
   },
